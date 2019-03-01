@@ -112,3 +112,4 @@ venv.bak/
 # Project Specific
 data/chembl_24/
 data/chembl_24_1_sqlite.tar.gz
+data/raw_data.csv
