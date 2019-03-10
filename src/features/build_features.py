@@ -31,7 +31,6 @@ class Features(object):
     def get_numpy_fingerprint_from_smiles(smiles):
         mol = Chem.MolFromSmiles(smiles)
         fingerprint = AllChem.GetMorganFingerprintAsBitVect(mol, 3)
-        DataStructs.cDataStructs.ExplicitBitVect.GetNumBits()
-        finger_container = np.empty(2048)
+        finger_container = np.empty(fingerprint.GetNumBits())
         DataStructs.ConvertToNumpyArray(fingerprint, finger_container)
         return finger_container
