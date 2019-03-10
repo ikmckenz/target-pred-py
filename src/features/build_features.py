@@ -17,9 +17,9 @@ class Features(object):
 
     def build_training_features(self):
         data_set = pd.read_csv(self.project_base + self.processed_data_path)
-        data_set = data_set[:2]
         X = data_set["canonical_smiles"].apply(lambda x:
                                                self.get_numpy_fingerprint_from_smiles(x))
+        X = np.stack(X.values)
 
         le = preprocessing.LabelEncoder().fit(data_set["pref_name"])
         y = le.transform(data_set["pref_name"])
