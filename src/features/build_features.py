@@ -34,3 +34,8 @@ class Features(object):
         finger_container = np.empty(fingerprint.GetNumBits())
         DataStructs.ConvertToNumpyArray(fingerprint, finger_container)
         return finger_container
+
+    @staticmethod
+    def list_to_input(list_input):
+        arr = np.array(list_input)
+        return arr.reshape(1, -1)
