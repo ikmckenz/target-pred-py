@@ -21,6 +21,7 @@ class Features(object):
         self.features_filename = features_filename
 
     def build_training_features(self):
+        print("Building training features")
         file_loc = self.project_base + self.processed_data_path + "smiles_to_receptor.csv"
         data_set = pd.read_csv(file_loc)
         X = data_set["canonical_smiles"].apply(lambda x:
@@ -39,11 +40,13 @@ class Features(object):
             X, y, y_transform = self.build_training_features()
             with open(file_loc, 'wb') as f:
                 pickle.dump([X, y, y_transform], f)
+            return X, y, y_transform
         elif overwrite:
             X, y, y_transform = self.build_training_features()
             os.remove(file_loc)
             with open(file_loc, 'wb') as f:
                 pickle.dump([X, y, y_transform], f)
+            return X, y, y_transform
         else:
             print("Not overwriting existing features")
 
@@ -57,7 +60,8 @@ class Features(object):
                 y_transform = data[2]
                 return X, y, y_transform
         else:
-            print("Could not find features to load")
+            return self.save_training_features()
+
 
     @staticmethod
     def get_numpy_fingerprint_from_smiles(smiles):
@@ -71,3 +75,7 @@ class Features(object):
     def list_to_input(list_input):
         arr = np.array(list_input)
         return arr.reshape(1, -1)
+
+
+if __name__ == "__main__":
+    Features().save_training_features()
