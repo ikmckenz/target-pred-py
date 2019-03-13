@@ -9,7 +9,7 @@ class StructureToMOAModel(object):
     def __init__(self,
                  y_transform=None,
                  project_base="../../",
-                 model_save_path="models/model.pickle"):
+                 model_save_path="models/structuretomoa_model.pickle"):
 
         self.project_base = project_base
         self.model_save_path = model_save_path
