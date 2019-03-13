@@ -56,4 +56,4 @@ class StructureToMOAModel(object):
 
     def _save_model(self, file_loc):
         with open(file_loc, 'wb') as f:
-            pickle.dump([self.model, self.y_transform], f)
+            pickle.dump([self.model, self.y_transform], f, protocol=4)

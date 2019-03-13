@@ -110,7 +110,5 @@ venv.bak/
 .idea/
 
 # Project Specific
-data/external/chembl_24/
-data/chembl_24_1_sqlite.tar.gz
-data/interim/smiles_to_activity.csv
+data/
 notebooks/.ipynb_checkpoints

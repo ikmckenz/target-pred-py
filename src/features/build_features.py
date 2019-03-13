@@ -39,13 +39,13 @@ class Features(object):
         if not os.path.isfile(file_loc):
             X, y, y_transform = self.build_training_features()
             with open(file_loc, 'wb') as f:
-                pickle.dump([X, y, y_transform], f)
+                pickle.dump([X, y, y_transform], f, protocol=4)
             return X, y, y_transform
         elif overwrite:
             X, y, y_transform = self.build_training_features()
             os.remove(file_loc)
             with open(file_loc, 'wb') as f:
-                pickle.dump([X, y, y_transform], f)
+                pickle.dump([X, y, y_transform], f, protocol=4)
             return X, y, y_transform
         else:
             print("Not overwriting existing features")
@@ -78,4 +78,4 @@ class Features(object):
 
 
 if __name__ == "__main__":
-    Features().save_training_features()
+    Features().save_training_features(overwrite=True)
