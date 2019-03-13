@@ -1,6 +1,6 @@
 """
 This module will download the SQLite version of the ChEMBL database if it
-doesn't exist in data/, and use it to create the data sets for analysis.
+doesn't exist in data/, and use it to create the interim data sets.
 """
 
 import csv
@@ -19,10 +19,10 @@ class ChEMBL_SQLite(object):
     """
     url = "ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_24_1/"
     filename = "chembl_24_1_sqlite.tar.gz"
-    dbpath = "external/chembl_24/chembl_24_sqlite/chembl_24.db"
+    dbpath = "chembl_24/chembl_24_sqlite/chembl_24.db"
     csvfilename = "interim/smiles_to_activity.csv"
 
-    def __init__(self, path="../../data/"):
+    def __init__(self, path="../../data/external/"):
         self.path = path
 
     def get_raw_data(self):
