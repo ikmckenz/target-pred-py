@@ -1,3 +1,6 @@
+import os
+import pickle
+
 import numpy as np
 import pandas as pd
 from rdkit import Chem, DataStructs
@@ -11,12 +14,15 @@ class Features(object):
 
     def __init__(self,
                  project_base="../../",
-                 processed_data_path="data/processed/smiles_to_receptor.csv"):
+                 processed_data_path="data/processed/",
+                 features_filename="features.pickle"):
         self.project_base = project_base
         self.processed_data_path = processed_data_path
+        self.features_filename = features_filename
 
     def build_training_features(self):
-        data_set = pd.read_csv(self.project_base + self.processed_data_path)
+        file_loc = self.project_base + self.processed_data_path + "smiles_to_receptor.csv"
+        data_set = pd.read_csv(file_loc)
         X = data_set["canonical_smiles"].apply(lambda x:
                                                self.get_numpy_fingerprint_from_smiles(x))
         X = np.stack(X.values)
@@ -26,6 +32,32 @@ class Features(object):
         y_transform = le.classes_
 
         return X, y, y_transform
+
+    def save_training_features(self, overwrite=False):
+        file_loc = self.project_base + self.processed_data_path + self.features_filename
+        if not os.path.isfile(file_loc):
+            X, y, y_transform = self.build_training_features()
+            with open(file_loc, 'wb') as f:
+                pickle.dump([X, y, y_transform], f)
+        elif overwrite:
+            X, y, y_transform = self.build_training_features()
+            os.remove(file_loc)
+            with open(file_loc, 'wb') as f:
+                pickle.dump([X, y, y_transform], f)
+        else:
+            print("Not overwriting existing features")
+
+    def load_training_features(self):
+        file_loc = self.project_base + self.processed_data_path + self.features_filename
+        if os.path.isfile(file_loc):
+            with open(file_loc, "rb") as f:
+                data = pickle.load(f)
+                X = data[0]
+                y = data[1]
+                y_transform = data[2]
+                return X, y, y_transform
+        else:
+            print("Could not find features to load")
 
     @staticmethod
     def get_numpy_fingerprint_from_smiles(smiles):
