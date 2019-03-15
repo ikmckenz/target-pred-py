@@ -62,7 +62,6 @@ class Features(object):
         else:
             return self.save_training_features()
 
-
     @staticmethod
     def get_numpy_fingerprint_from_smiles(smiles):
         mol = Chem.MolFromSmiles(smiles)
