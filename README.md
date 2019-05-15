@@ -1,5 +1,7 @@
-# [WIP] Predict NPS Python
-This is an implementation of the [Predict-NPS](https://www.predictnps.eu/) in-silico models to predict the behaviour and properties of New Psychoactive Substances (NPS) in Python.
+# [WIP] Small Molecule Target Predicition Py
+This is a simple machine learning model to predict binding behavior of small molecule drugs in Python.
+
+Similar work has been conducted by [SwissTargetPrediction](http://www.swisstargetprediction.ch/), [Predict NPS](https://www.predictnps.eu/), and [SuperPred](http://prediction.charite.de/).
 
 The primary model is `StructureToMOAModel`, which predicts a mechanism of action from the structure of a drug-like molecule.
 This model is trained by creating a data set of chemical structures (encoded as SMILES) mapped to mechanisms of action. 
