@@ -9,3 +9,5 @@ The SMILES data is used to generate a feature vector for each molecule with chem
 
 This uses and includes data from ChEMBL, data is from http://www.ebi.ac.uk/chembl - the version of ChEMBL is
 chembl_24_1.
+
+Project based on the [cookiecutter data science](https://drivendata.github.io/cookiecutter-data-science/) project template.
