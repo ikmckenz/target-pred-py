@@ -15,7 +15,7 @@ def main(basedir=""):
     this will be improved later"""
 
     if not os.path.isfile(basedir + INTERIM_DATA):
-        chembl = ChEMBL_SQLite(path="data/")
+        chembl = ChEMBL_SQLite()
         chembl.get_raw_data()
 
     data_set = pd.read_csv(basedir + INTERIM_DATA)

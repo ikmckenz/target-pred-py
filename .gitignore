@@ -110,5 +110,8 @@ venv.bak/
 .idea/
 
 # Project Specific
-data/
+*.tar.gz
+*.csv
+*.pickle
+data/external/chembl_24/
 notebooks/.ipynb_checkpoints
