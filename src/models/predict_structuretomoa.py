@@ -1,3 +1,6 @@
+# pylint: disable=invalid-name
+"""Script to predict target for a small molecule"""
+
 import argparse
 from src.features.build_features import Features
 from src.models.models import StructureToMOAModel

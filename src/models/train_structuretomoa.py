@@ -1,3 +1,6 @@
+# pylint: disable=invalid-name
+"""Script to train the structure to MOA model"""
+
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split

@@ -1,3 +1,5 @@
+"""Contains the classes for dealing with features for the models"""
+
 import os
 import pickle
 
@@ -8,7 +10,7 @@ from rdkit.Chem import AllChem
 from sklearn import preprocessing
 
 
-class Features(object):
+class Features:
     """This class turns the processed data into features and results for
     training and also turns SMILES into features for inference"""
 
@@ -21,22 +23,25 @@ class Features(object):
         self.features_filename = features_filename
 
     def build_training_features(self):
+        """Take the smiles to receptor data and create feature vectors"""
+
         print("Building training features")
         file_loc = self.project_base + self.processed_data_path + "smiles_to_receptor.csv"
         data_set = pd.read_csv(file_loc)
-        X = data_set["canonical_smiles"].apply(lambda x:
-                                               self.get_numpy_fingerprint_from_smiles(x))
+        X = data_set["canonical_smiles"].map(self.get_numpy_fingerprint_from_smiles)
         X = np.stack(X.values)
 
-        le = preprocessing.LabelEncoder().fit(data_set["pref_name"])
-        y = le.transform(data_set["pref_name"])
-        y_transform = le.classes_
+        label_encoder = preprocessing.LabelEncoder().fit(data_set["pref_name"])
+        y = label_encoder.transform(data_set["pref_name"])
+        y_transform = label_encoder.classes_
 
         return X, y, y_transform
 
     def save_training_features(self, overwrite=False):
+        """Save the generated features"""
+
         file_loc = self.project_base + self.processed_data_path + self.features_filename
-        if not os.path.isfile(file_loc):
+        if not os.path.isfile(file_loc):  # pylint: disable=no-else-return
             X, y, y_transform = self.build_training_features()
             with open(file_loc, 'wb') as f:
                 pickle.dump([X, y, y_transform], f, protocol=4)
@@ -48,9 +53,11 @@ class Features(object):
                 pickle.dump([X, y, y_transform], f, protocol=4)
             return X, y, y_transform
         else:
-            print("Not overwriting existing features")
+            raise IOError("Not overwriting existing features")
 
     def load_training_features(self):
+        """Load saved features"""
+
         file_loc = self.project_base + self.processed_data_path + self.features_filename
         if os.path.isfile(file_loc):
             with open(file_loc, "rb") as f:
@@ -64,6 +71,8 @@ class Features(object):
 
     @staticmethod
     def get_numpy_fingerprint_from_smiles(smiles):
+        """Get Morgan Fingerprint as NumPy vector from SMILES string"""
+
         mol = Chem.MolFromSmiles(smiles)
         fingerprint = AllChem.GetMorganFingerprintAsBitVect(mol, 3)
         finger_container = np.empty(fingerprint.GetNumBits())
@@ -72,6 +81,8 @@ class Features(object):
 
     @staticmethod
     def list_to_input(list_input):
+        """Reshape a list to model input"""
+
         arr = np.array(list_input)
         return arr.reshape(1, -1)
 

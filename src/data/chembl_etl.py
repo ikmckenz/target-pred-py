@@ -10,7 +10,7 @@ import tarfile
 import urllib.request
 
 
-class ChEMBL_SQLite(object):
+class ChEMBL_SQLite:  # pylint: disable=invalid-name
     """ChEMBL data http://www.ebi.ac.uk/chembl version chembl_24_1.
 
     Args:
@@ -90,8 +90,8 @@ class ChEMBL_SQLite(object):
             if not os.path.isfile(self.path + self.filename):
                 delete_tar = True
                 print("Downloading ChEMBL database")
-                file, _ = urllib.request.urlretrieve(self.url + self.filename,
-                                                     self.path + self.filename)
+                urllib.request.urlretrieve(self.url + self.filename,
+                                           self.path + self.filename)
 
             print("Extracting tarfile")
             tarfile.open(self.path + self.filename).extractall(path=self.path)
