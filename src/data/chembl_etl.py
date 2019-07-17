@@ -9,6 +9,57 @@ import sqlite3
 import tarfile
 import urllib.request
 
+OLD_QUERY = """
+            SELECT 
+                canonical_smiles, published_value, published_units, pref_name
+            FROM 
+                compound_structures as cs, activities as ac, assays as assays, target_dictionary as td
+            WHERE 
+                cs.molregno = ac.molregno 
+            AND
+                /* Endpoint is Ki*/
+                ac.bao_endpoint = "BAO_0000192"
+            AND
+                ac.published_value IS NOT NULL
+            AND
+                ac.assay_id = assays.assay_id
+            AND
+                assays.tid = td.tid
+            AND
+                td.pref_name != "Unchecked"
+            AND
+                td.organism = "Homo sapiens"
+            """
+
+SWISS_QUERY = """
+                SELECT
+                    canonical_smiles, standard_value, standard_units, pref_name
+                FROM
+                    compound_structures as cs, target_dictionary as td, assays, activities, compound_properties
+                WHERE
+                    compound_properties.molregno = cs.molregno
+                AND
+                    cs.molregno = activities.molregno
+                AND
+                    activities.assay_id = assays.assay_id
+                AND 
+                    assays.tid = td.tid
+                AND
+                    assays.assay_organism = "Homo sapiens"
+                AND
+                    assays.assay_type = "B"
+                AND
+                    activities.type IN ("Ki","Kd","IC50","EC50")
+                AND
+                    activities.standard_units IN ("mM", "uM","nM")
+                AND
+                    activities.standard_relation in ("=", "<", "<=")
+                AND
+                    compound_properties.heavy_atoms < 80
+                AND
+                    td.target_type IN ("SINGLE PROTEIN", "PROTEIN COMPLEX")
+              """
+
 
 class ChEMBL_SQLite:  # pylint: disable=invalid-name
     """ChEMBL data http://www.ebi.ac.uk/chembl version chembl_24_1.
@@ -28,7 +79,7 @@ class ChEMBL_SQLite:  # pylint: disable=invalid-name
     def get_raw_data(self):
         """Will create the raw data if it does not already exist."""
         if not os.path.isfile(self.path + self.csvfilename):
-            self._write_raw_data()
+            self._write_raw_data(query=SWISS_QUERY)
 
     def db_connect(self):
         """Returns a connection to the ChEMBL database,
@@ -43,33 +94,11 @@ class ChEMBL_SQLite:  # pylint: disable=invalid-name
         conn = sqlite3.connect(self.path + self.dbpath)
         return conn
 
-    def _write_raw_data(self):
+    def _write_raw_data(self, query):
         """This runs the query to get our data from the database
         For now this query returns good-enough data to do a quick analysis,
         this is not the final query.
         """
-
-        query = """
-                SELECT 
-                    canonical_smiles, published_value, published_units, pref_name
-                FROM 
-                    compound_structures as cs, activities as ac, assays as assays, target_dictionary as td
-                WHERE 
-                    cs.molregno = ac.molregno 
-                AND
-                    /* Endpoint is Ki*/
-                    ac.bao_endpoint = "BAO_0000192"
-                AND
-                    ac.published_value IS NOT NULL
-                AND
-                    ac.assay_id = assays.assay_id
-                AND
-                    assays.tid = td.tid
-                AND
-                    td.pref_name != "Unchecked"
-                AND
-                    td.organism = "Homo sapiens"
-                """
 
         conn = self.db_connect()
         print("Running SQL query")
