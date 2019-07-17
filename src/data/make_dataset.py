@@ -20,18 +20,14 @@ def main(basedir=""):
     data_set = pd.read_csv(basedir + INTERIM_DATA)
 
     # Drop records with <10mM
-    data_set.drop(data_set[(data_set["standard_units"] == "mM") & (data_set["standard_value"] < 10)].index, inplace=True)
-    data_set.drop(data_set[(data_set["standard_units"] == "uM") & (data_set["standard_value"] < 10000)].index, inplace=True)
-    data_set.drop(data_set[(data_set["standard_units"] == "nM") & (data_set["standard_value"] < 10000000)].index, inplace=True)
+    data_set.drop(data_set[(data_set["standard_units"] == "mM") & (data_set["standard_value"] >= 10)].index, inplace=True)
+    data_set.drop(data_set[(data_set["standard_units"] == "uM") & (data_set["standard_value"] >= 10000)].index, inplace=True)
+    data_set.drop(data_set[(data_set["standard_units"] == "nM") & (data_set["standard_value"] >= 10000000)].index, inplace=True)
 
     # Drop binding information as we are done with it
     data_set.drop(["standard_value", "standard_units"], axis=1, inplace=True)
 
-    # Only save entries where we have more than 1000 data points per receptor
-    y_classes = data_set["pref_name"].value_counts()
-    y_classes = y_classes[y_classes >= 1000].index.tolist()
-    data_set = data_set[~data_set["pref_name"].isin(y_classes)]
-
+    print("Saving processed data")
     data_set.to_csv(basedir + FINAL_DATA)
 
 
