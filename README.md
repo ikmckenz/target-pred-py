@@ -7,7 +7,7 @@ The primary model is `StructureToMOAModel`, which predicts a mechanism of action
 This model is trained by creating a data set of chemical structures (encoded as SMILES) mapped to mechanisms of action. 
 The SMILES data is used to generate a feature vector for each molecule with chemical fingerprinting algorithms, and this is fed into a random forests machine learning algorithm.
 
-###Getting started
+### Getting started
 To get up and running, first create the environment:
 ```bash
 conda create --name target-pred-py
