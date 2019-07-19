@@ -27,6 +27,10 @@ def main(basedir=""):
     # Drop binding information as we are done with it
     data_set.drop(["standard_value", "standard_units"], axis=1, inplace=True)
 
+    # Keep only rows where the target appears more than 1000 times
+    count = data_set["pref_name"].value_counts()
+    data_set = data_set[data_set["pref_name"].isin(count.index[count > 1000])]
+
     print("Saving processed data")
     data_set.to_csv(basedir + FINAL_DATA)
 
