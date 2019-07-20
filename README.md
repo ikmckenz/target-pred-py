@@ -18,7 +18,7 @@ conda install -n target-pred-py scikit-learn
 Then make the dataset, features, and train the model:
 ```bash
 cd src/data/
-export PYTHONPATH=../../src:$PYTHONPATH
+export PYTHONPATH=../../:$PYTHONPATH
 python make_dataset.py 
 cd ../features/
 python build_features.py
