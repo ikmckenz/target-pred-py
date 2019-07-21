@@ -68,9 +68,9 @@ class ChEMBL_SQLite:  # pylint: disable=invalid-name
         path (string, optional): Where the data will be downloaded. Defaults to
             the `data` directory of code.
     """
-    url = "ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_24_1/"
-    filename = "chembl_24_1_sqlite.tar.gz"
-    dbpath = "chembl_24/chembl_24_sqlite/chembl_24.db"
+    url = "ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_25/"
+    filename = "chembl_25_sqlite.tar.gz"
+    dbpath = "chembl_25/chembl_25_sqlite/chembl_25.db"
     csvfilename = "../interim/smiles_to_activity.csv"
 
     def __init__(self, path="../../data/external/"):

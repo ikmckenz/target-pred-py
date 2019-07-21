@@ -114,4 +114,5 @@ venv.bak/
 *.csv
 *.pickle
 data/external/chembl_24/
+data/external/chembl_25/
 notebooks/.ipynb_checkpoints
