@@ -13,12 +13,13 @@ class StructureToMOAModel:
     def __init__(self,
                  y_transform=None,
                  project_base="../../",
-                 model_save_path="models/structuretomoa_model.pickle"):
+                 model_save_path="models/structuretomoa_model.pickle",
+                 n_estimators=10):
 
         self.project_base = project_base
         self.model_save_path = model_save_path
 
-        self.model = RandomForestClassifier()
+        self.model = RandomForestClassifier(n_estimators=n_estimators, n_jobs=-1)
         self.y_transform = y_transform
         self.trained = False
 
