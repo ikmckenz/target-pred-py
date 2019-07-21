@@ -31,6 +31,6 @@ python predict_structuretomoa.py --smiles "yoursmilesstring"
 ```
 
 This uses and includes data from ChEMBL, data is from http://www.ebi.ac.uk/chembl - the version of ChEMBL is
-chembl_24_1.
+chembl_25.
 
 Project structure based on the [cookiecutter data science](https://drivendata.github.io/cookiecutter-data-science/) project template.
