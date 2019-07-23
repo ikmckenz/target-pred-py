@@ -4,6 +4,7 @@ import os
 import pickle
 
 import numpy as np
+import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 
 
@@ -19,7 +20,8 @@ class StructureToMOAModel:
         self.project_base = project_base
         self.model_save_path = model_save_path
 
-        self.model = RandomForestClassifier(n_estimators=n_estimators, n_jobs=-1)
+        self.model = RandomForestClassifier(n_estimators=n_estimators,
+                                            n_jobs=-1)
         self.y_transform = y_transform
         self.trained = False
 
@@ -42,6 +44,21 @@ class StructureToMOAModel:
 
         """
         return self.model.predict(data)
+
+    def predict_top(self, data, n_outputs=5):
+        """Predict top n MOAs from a structure
+
+        Args:
+            data: The structure to predict
+            n_outputs: The number of predictions
+        """
+
+        model_output = self.model.predict_proba(data)[0]
+        top = np.argsort(model_output)[::-1][:n_outputs]
+        probabilities = model_output[top]
+        labels = [self.pred_to_label(x) for x in top]
+
+        return pd.DataFrame({"target": labels, "probability": probabilities})
 
     def pred_to_label(self, pred):
         """Take a model prediction and return the original label"""
