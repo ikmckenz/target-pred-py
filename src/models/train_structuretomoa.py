@@ -1,5 +1,6 @@
 # pylint: disable=invalid-name
 """Script to train the structure to MOA model"""
+import argparse
 
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -7,6 +8,10 @@ from sklearn.model_selection import train_test_split
 
 from src.features.build_features import Features
 from src.models.models import StructureToMOAModel
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--trees", help="n_estimators for the model", type=int, default=10)
+args = parser.parse_args()
 
 # Training data
 print("Loading training features")
@@ -16,7 +21,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
 
 # Fitting model
 print("Fitting model")
-model = StructureToMOAModel(y_transform=y_transform)
+model = StructureToMOAModel(y_transform=y_transform, n_estimators=args.trees)
 model.train(X_train, y_train)
 
 # Predicting test set
