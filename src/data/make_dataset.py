@@ -21,6 +21,7 @@ def main(basedir=""):
         chembl.get_raw_data()
 
     data_set = pd.read_csv(basedir + INTERIM_DATA)
+    print("Cleaning raw data")
 
     # Drop records with <10mM
     data_set.drop(data_set[(data_set["standard_units"] == "mM") & (data_set["standard_value"] >= 10)].index, inplace=True)
