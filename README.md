@@ -13,6 +13,7 @@ To get up and running, first create the environment:
 conda create --name target-pred-py
 conda activate target-pred-py
 conda install -c conda-forge -n target-pred-py rdkit
+conda install -c conda-forge -n target-pred-py textdistance
 conda install -n target-pred-py scikit-learn
 ```
 Then make the dataset, features, and train the model:
