@@ -51,8 +51,9 @@ def main(basedir=""):
                                       index=name_groupings["pref_name"]).to_dict()
     group_to_agg_receptor = dict(
         name_groupings.groupby("group")["pref_name"].apply(lambda x: ", ".join(x)))
-    data_set["pref_name"].replace(receptor_to_group_map, inplace=True)
-    data_set["pref_name"].replace(group_to_agg_receptor, inplace=True)
+    receptor_to_receptor_group_map = {key: group_to_agg_receptor[value] for key, value in receptor_to_group_map.items()}
+
+    data_set["pref_name"].replace(receptor_to_receptor_group_map, inplace=True)
 
     # Keep only rows where the target appears more than 100 times
     count = data_set["pref_name"].value_counts()
