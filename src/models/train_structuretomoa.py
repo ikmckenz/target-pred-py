@@ -33,15 +33,15 @@ print(confusion_matrix(y_test, y_pred))
 
 correct = 0
 incorrect = 0
-for idx, x in enumerate(X_test):
-    top_five = model.predict_top(x)
-    if y_test[idx] in top_five:
+top_five, _ = model.predict_top(X_test)
+for idx, pred in enumerate(top_five):
+    if y_test[idx] in pred:
         correct += 1
     else:
         incorrect += 1
 
 print("Top 5 Accuracy:")
-print("{} correct in top 5, {} not in top 5. {.2f} top 5 accuracy.".format(
+print("{} correct in top 5, {} not in top 5. {:.2%} top 5 accuracy.".format(
     correct, incorrect, (correct/(correct+incorrect))))
 
 # Save model
