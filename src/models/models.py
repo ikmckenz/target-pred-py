@@ -73,7 +73,7 @@ class StructureToMOAModel:
         """
         top, probabilities = self.predict_top(data, n_outputs)
         labels = [self.pred_to_label(x) for x in top[0]]
-        return pd.DataFrame({"target": labels, "probability": probabilities[0][0]})
+        return pd.DataFrame({"target": labels, "probability": probabilities[0]})
 
     def pred_to_label(self, pred):
         """Take a model prediction and return the original label"""
