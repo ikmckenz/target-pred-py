@@ -16,7 +16,7 @@ model.load_model()
 smiles = args.smiles
 smiles_features = features.get_numpy_fingerprint_from_smiles(smiles)
 model_input = features.list_to_input(smiles_features)
-top_output = model.predict_top(model_input)
+top_output = model.predict_top_pretty(model_input)
 
 print("{} predicted to act on:".format(smiles))
 print(top_output)

@@ -31,5 +31,18 @@ y_pred = model.predict(X_test)
 print(classification_report(y_test, y_pred))
 print(confusion_matrix(y_test, y_pred))
 
+correct = 0
+incorrect = 0
+top_five, _ = model.predict_top(X_test)
+for idx, pred in enumerate(top_five):
+    if y_test[idx] in pred:
+        correct += 1
+    else:
+        incorrect += 1
+
+print("Top 5 Accuracy:")
+print("{} correct in top 5, {} not in top 5. {:.2%} top 5 accuracy.".format(
+    correct, incorrect, (correct/(correct+incorrect))))
+
 # Save model
 model.save_model(overwrite=True)

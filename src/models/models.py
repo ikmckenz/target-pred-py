@@ -51,14 +51,29 @@ class StructureToMOAModel:
         Args:
             data: The structure to predict
             n_outputs: The number of predictions
+
+        Returns:
+            top: list of numeric category predictions
+            probabilities: list of probabilities
         """
+        model_output = self.model.predict_proba(data)
+        top = np.argsort(model_output)[:, ::-1][:, :n_outputs]
+        probabilities = np.take_along_axis(model_output, top, 1)
+        return top, probabilities
 
-        model_output = self.model.predict_proba(data)[0]
-        top = np.argsort(model_output)[::-1][:n_outputs]
-        probabilities = model_output[top]
-        labels = [self.pred_to_label(x) for x in top]
+    def predict_top_pretty(self, data, n_outputs=5):
+        """Predict top n MOAs from a single structure
 
-        return pd.DataFrame({"target": labels, "probability": probabilities})
+        Args:
+            data: The structure to predict
+            n_outputs: The number of predictions
+
+        Returns:
+            pd.DataFrame: A pretty dataframe of labels and their probabilities
+        """
+        top, probabilities = self.predict_top(data, n_outputs)
+        labels = [self.pred_to_label(x) for x in top[0]]
+        return pd.DataFrame({"target": labels, "probability": probabilities[0]})
 
     def pred_to_label(self, pred):
         """Take a model prediction and return the original label"""
