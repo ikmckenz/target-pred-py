@@ -58,7 +58,7 @@ class StructureToMOAModel:
         """
         model_output = self.model.predict_proba(data)
         top = np.argsort(model_output)[:, ::-1][:, :n_outputs]
-        probabilities = model_output[:, top] # this line kills things, Memory Error
+        probabilities = np.take_along_axis(model_output, top, 1)
         return top, probabilities
 
     def predict_top_pretty(self, data, n_outputs=5):
