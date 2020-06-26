@@ -29,10 +29,13 @@ conda install -n target-pred-py scikit-learn
 ```
 Then make the dataset, features, and train the model:
 ```bash
-export PYTHONPATH=./:$PYTHONPATH
-python src/data/make_dataset.py 
-python src/features/build_features.py
-python src/models/train_structuretomoa.py
+export PYTHONPATH=$PWD
+cd src/data/
+python make_dataset.py 
+cd ../features/
+python build_features.py
+cd ../models/
+python train_structuretomoa.py
 ```
 Now you can predict on new molecules:
 ```bash
