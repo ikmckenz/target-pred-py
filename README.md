@@ -1,11 +1,27 @@
-# [WIP] Small Molecule Target Predicition Py
+# Small Molecule Target Predicition in Python
 This is a simple machine learning model to predict binding behavior of small molecule drugs in Python.
 
 Similar work has been conducted by [SwissTargetPrediction](http://www.swisstargetprediction.ch/), [Predict NPS](https://www.predictnps.com/), and [SuperPred](http://prediction.charite.de/).
 
-The primary model is `StructureToMOAModel`, which predicts a mechanism of action from the structure of a drug-like molecule.
+* SwissTargetPrediction \[i] uses an ensemble of two models, one using shape similarities \[ii], the other using FP2 fingerprint similarity implemented by OpenBabel. 
+Then they combine the two similarity measures using a multiple logistic regression.
+    1. David Gfeller, Olivier Michielin, Vincent Zoete (2013) Shaping the interaction landscape of bioactive molecules.
+    2. Armstrong, M.S.et al. (2011) Improving the accuracy of ultrafast ligand-basedscreening: incorporating lipophilicity into ElectroShape as an extra dimension.
+* PredictNPS takes the Mold2 molecular descriptors and the FP6 fingerprint to create features, applies a variance and correlation filter, and then normalizes the data to create one feature vector. 
+They feed this into a random forest classifier with 500 trees. 
+
+So far, Target Pred Py just uses FP6 fingerprints, and feeds them into a random forest classifier with a variable number of trees. 
+The sklearn random forest classifier holds all the decision trees in memory at the same time, and with the size of this data set (~200MB for just the features to SMILES with ChEMBL 25) the memory requirements increase rapidly along with the trees. 
+It takes an AWS r5.4xlarge (with 128GB RAM) to train the model with 150 trees in the forest, and it would require roughly double the memory to serialize the model and save it for later use. 
+Refactoring to a different random forest library, or writing our own, would help here.
+
+Currently the model with only FP6 fingerprints for features and only 150 trees in the random forest achieves 78% for precision, recall, and F1 score. 
+Adding more features from molecular descriptors or using an ensemble model would likely boost accuracy without much engineering effort. 
+Also, experiments with different models such as Logistic Regression (like SwissTargetPrediction), SVMs, and neural networks should be tried.  
+
+The primary model is in `StructureToMOAModel`, which predicts a mechanism of action from the structure of a drug-like molecule.
 This model is trained by creating a data set of chemical structures (encoded as SMILES) mapped to mechanisms of action. 
-The SMILES data is used to generate a feature vector for each molecule with chemical fingerprinting algorithms, and this is fed into a random forests machine learning algorithm.
+The SMILES data is used to generate a feature vector for each molecule with chemical fingerprinting algorithms, and this is fed into a random forest machine learning algorithm.
 
 ### Getting started
 To get up and running, first create the environment:
