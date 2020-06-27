@@ -3,6 +3,7 @@ This is a simple machine learning model to predict binding behavior of small mol
 
 Similar work has been conducted by [SwissTargetPrediction](http://www.swisstargetprediction.ch/), [Predict NPS](https://www.predictnps.com/), and [SuperPred](http://prediction.charite.de/).
 
+### Model
 Target Pred Py is a fairly simple model at present, but can be easily expanded an improved on.
 Currently it uses FP6 fingerprints, and feeds them into a random forest classifier with a configurable number of trees. 
 The sklearn random forest classifier holds all the decision trees in memory at the same time, and with the size of this data set (~200MB for just the features to SMILES with ChEMBL 25) the memory requirements increase rapidly along with the trees. 
@@ -52,7 +53,7 @@ They feed this into a random forest classifier with 500 trees.
 
 
 
-This uses and includes data from ChEMBL, data is from http://www.ebi.ac.uk/chembl - the version of ChEMBL is
+Target Pred Py uses and includes data from ChEMBL, data is from http://www.ebi.ac.uk/chembl - the version of ChEMBL is
 chembl_25.
 
 Project structure based on the [cookiecutter data science](https://drivendata.github.io/cookiecutter-data-science/) project template.
