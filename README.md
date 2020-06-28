@@ -48,8 +48,9 @@ python predict_structuretomoa.py --smiles "yoursmilesstring"
 Then they combine the two similarity measures using a multiple logistic regression.
     1. David Gfeller, Olivier Michielin, Vincent Zoete (2013) Shaping the interaction landscape of bioactive molecules.
     2. Armstrong, M.S.et al. (2011) Improving the accuracy of ultrafast ligand-basedscreening: incorporating lipophilicity into ElectroShape as an extra dimension.
-* PredictNPS takes the Mold2 molecular descriptors and the FP6 fingerprint to create features, applies a variance and correlation filter, and then normalizes the data to create one feature vector. 
+* PredictNPS takes  Mold2 molecular descriptors and ECFP6 fingerprints to create features, applies a variance and correlation filter, and then normalizes the data to create one feature vector. 
 They feed this into a random forest classifier with 500 trees. 
+* For target prediction SuperPred takes ECFP4 fingerprints and computes a weighted Tanimoto similarity score to identify most similar ligands (and respective targets).
 
 
 
