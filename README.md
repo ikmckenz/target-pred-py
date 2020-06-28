@@ -1,10 +1,10 @@
 # Small Molecule Target Predicition in Python
-This is a simple machine learning model to predict binding behavior of small molecule drugs in Python.
+Target Pred Py is a simple machine learning model to predict the binding behavior of small molecule drugs in Python.
 
 Similar work has been conducted by [SwissTargetPrediction](http://www.swisstargetprediction.ch/), [Predict NPS](https://www.predictnps.com/), and [SuperPred](http://prediction.charite.de/).
 
 ### Model
-Target Pred Py is a fairly simple model at present, but can be easily expanded an improved on.
+Target Pred Py is a simple model that can be easily expanded and improved on.
 Currently it uses FP6 fingerprints, and feeds them into a random forest classifier with a configurable number of trees. 
 The sklearn random forest classifier holds all the decision trees in memory at the same time, and with the size of this data set (~200MB for just the features to SMILES with ChEMBL 25) the memory requirements increase rapidly along with the trees. 
 It takes an AWS r5.4xlarge (with 128GB RAM) to train the model with 150 trees in the forest, and it would require roughly double the memory to serialize the model and save it for later use. 
