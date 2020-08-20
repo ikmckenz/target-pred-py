@@ -8,7 +8,9 @@ import pandas as pd
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem
 from sklearn import preprocessing
+from multiprocessing import cpu_count, Pool
 
+WORKERS = cpu_count()
 
 class Features:
     """This class turns the processed data into features and results for
@@ -28,7 +30,12 @@ class Features:
         print("Building training features")
         file_loc = self.project_base + self.processed_data_path + "smiles_to_receptor.csv"
         data_set = pd.read_csv(file_loc)
-        X = data_set["canonical_smiles"].map(self.get_numpy_fingerprint_from_smiles)
+        smiles = data_set["canonical_smiles"]
+        split_smiles = np.array_split(smiles, WORKERS)
+        pool = Pool(WORKERS)
+        X = pd.concat(pool.map(self.get_numpy_fingerprint_from_smiles_series, split_smiles))
+        pool.close()
+        pool.join()
         X = np.stack(X.values)
 
         label_encoder = preprocessing.LabelEncoder().fit(data_set["pref_name"])
@@ -78,6 +85,11 @@ class Features:
         finger_container = np.empty(fingerprint.GetNumBits())
         DataStructs.ConvertToNumpyArray(fingerprint, finger_container)
         return finger_container
+
+    def get_numpy_fingerprint_from_smiles_series(self, smiles_series):
+        """Apply get_numpy_fingerprint_from_smiles to a Pandas Series"""
+
+        return smiles_series.map(self.get_numpy_fingerprint_from_smiles)
 
     @staticmethod
     def list_to_input(list_input):
