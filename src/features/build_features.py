@@ -2,15 +2,16 @@
 
 import os
 import pickle
+from multiprocessing import Pool, cpu_count
 
 import numpy as np
 import pandas as pd
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem
 from sklearn import preprocessing
-from multiprocessing import cpu_count, Pool
 
 CORES = cpu_count()
+
 
 class Features:
     """This class turns the processed data into features and results for
@@ -34,7 +35,10 @@ class Features:
         if parallel is not None:
             split_smiles = np.array_split(smiles, parallel)
             pool = Pool(CORES)
-            X = pd.concat(pool.map(self.get_numpy_fingerprint_from_smiles_series, split_smiles))
+            X = pd.concat(
+                pool.map(self.get_numpy_fingerprint_from_smiles_series,
+                         split_smiles)
+            )
             pool.close()
             pool.join()
         else:
