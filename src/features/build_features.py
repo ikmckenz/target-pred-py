@@ -10,7 +10,7 @@ from rdkit.Chem import AllChem
 from sklearn import preprocessing
 from multiprocessing import cpu_count, Pool
 
-WORKERS = cpu_count()
+CORES = cpu_count()
 
 class Features:
     """This class turns the processed data into features and results for
@@ -24,18 +24,21 @@ class Features:
         self.processed_data_path = processed_data_path
         self.features_filename = features_filename
 
-    def build_training_features(self):
+    def build_training_features(self, parallel=None):
         """Take the smiles to receptor data and create feature vectors"""
 
         print("Building training features")
         file_loc = self.project_base + self.processed_data_path + "smiles_to_receptor.csv"
         data_set = pd.read_csv(file_loc)
         smiles = data_set["canonical_smiles"]
-        split_smiles = np.array_split(smiles, WORKERS)
-        pool = Pool(WORKERS)
-        X = pd.concat(pool.map(self.get_numpy_fingerprint_from_smiles_series, split_smiles))
-        pool.close()
-        pool.join()
+        if parallel is not None:
+            split_smiles = np.array_split(smiles, parallel)
+            pool = Pool(CORES)
+            X = pd.concat(pool.map(self.get_numpy_fingerprint_from_smiles_series, split_smiles))
+            pool.close()
+            pool.join()
+        else:
+            X = smiles.map(self.get_numpy_fingerprint_from_smiles)
         X = np.stack(X.values)
 
         label_encoder = preprocessing.LabelEncoder().fit(data_set["pref_name"])
@@ -44,17 +47,17 @@ class Features:
 
         return X, y, y_transform
 
-    def save_training_features(self, overwrite=False):
+    def save_training_features(self, overwrite=False, parallel=None):
         """Save the generated features"""
 
         file_loc = self.project_base + self.processed_data_path + self.features_filename
         if not os.path.isfile(file_loc):  # pylint: disable=no-else-return
-            X, y, y_transform = self.build_training_features()
+            X, y, y_transform = self.build_training_features(parallel=parallel)
             with open(file_loc, 'wb') as f:
                 pickle.dump([X, y, y_transform], f, protocol=4)
             return X, y, y_transform
         elif overwrite:
-            X, y, y_transform = self.build_training_features()
+            X, y, y_transform = self.build_training_features(parallel=parallel)
             os.remove(file_loc)
             with open(file_loc, 'wb') as f:
                 pickle.dump([X, y, y_transform], f, protocol=4)
@@ -100,4 +103,4 @@ class Features:
 
 
 if __name__ == "__main__":
-    Features().save_training_features(overwrite=True)
+    Features().save_training_features(overwrite=True, parallel=CORES)
