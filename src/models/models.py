@@ -8,7 +8,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 
 
-class StructureToMOAModel:
+class StructureToMOARFModel:
     """Defines the random forest classifier model from structure to MOA"""
 
     def __init__(self,
@@ -110,3 +110,19 @@ class StructureToMOAModel:
         """Private function to pickle the model"""
         with open(file_loc, 'wb') as f:
             pickle.dump([self.model, self.y_transform], f, protocol=4)
+
+
+class NNModel:
+
+    def __init__(self,
+                 y_transform=None,
+                 project_base="../../",
+                 model_save_path="models/nn_model.pickle"):
+
+        self.project_base = project_base
+        self.model_save_path = model_save_path
+
+        self.model = RandomForestClassifier()
+
+        self.y_transform = y_transform
+        self.trained = False

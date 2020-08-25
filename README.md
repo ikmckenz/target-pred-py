@@ -16,7 +16,7 @@ Top-5 accuracy increases in a linear fashion from 89% at 10 trees to 96% with 15
 Adding more features from molecular descriptors or using an ensemble model would likely boost accuracy without much engineering effort. 
 Also, experiments with different models such as Logistic Regression (like SwissTargetPrediction), SVMs, and neural networks should be tried.  
 
-The primary model is in `StructureToMOAModel`, which predicts a mechanism of action from the structure of a drug-like molecule.
+The primary model is in `StructureToMOARFModel`, which predicts a mechanism of action from the structure of a drug-like molecule.
 This model is trained by creating a data set of chemical structures (encoded as SMILES) mapped to mechanisms of action. 
 The SMILES data is used to generate a feature vector for each molecule with chemical fingerprinting algorithms, and this is fed into a random forest machine learning algorithm.
 
