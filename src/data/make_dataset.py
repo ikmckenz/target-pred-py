@@ -31,6 +31,9 @@ def main(basedir=""):
     # Drop binding information as we are done with it
     data_set.drop(["standard_value", "standard_units"], axis=1, inplace=True)
 
+    # Drop punctuation
+    data_set["pref_name"] = data_set["pref_name"].str.replace(";", "", regex=False)
+
     # Group targets by text similarity
     name_groupings = pd.DataFrame({"pref_name": data_set["pref_name"].unique()})
     name_groupings["group"] = -1
@@ -50,7 +53,10 @@ def main(basedir=""):
     receptor_to_group_map = pd.Series(name_groupings["group"].values,
                                       index=name_groupings["pref_name"]).to_dict()
     group_to_agg_receptor = dict(
-        name_groupings.groupby("group")["pref_name"].apply(lambda x: ", ".join(x)))
+        name_groupings.groupby("group")["pref_name"].apply(
+            lambda x: ", ".join(x)
+        )
+    )
     receptor_to_receptor_group_map = {key: group_to_agg_receptor[value] for key, value in receptor_to_group_map.items()}
 
     data_set["pref_name"].replace(receptor_to_receptor_group_map, inplace=True)
