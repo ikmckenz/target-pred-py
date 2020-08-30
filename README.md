@@ -20,6 +20,8 @@ The primary model is in `StructureToMOARFModel`, which predicts a mechanism of a
 This model is trained by creating a data set of chemical structures (encoded as SMILES) mapped to mechanisms of action. 
 The SMILES data is used to generate a feature vector for each molecule with chemical fingerprinting algorithms, and this is fed into a random forest machine learning algorithm.
 
+New models are currently being experimented on in the `notebooks/` folder.
+
 ### Getting started
 To get up and running, first create the environment:
 ```bash
