@@ -110,4 +110,3 @@ class StructureToMOARFModel:
         """Private function to pickle the model"""
         with open(file_loc, 'wb') as f:
             pickle.dump([self.model, self.y_transform], f, protocol=4)
-

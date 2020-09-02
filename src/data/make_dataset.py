@@ -24,9 +24,23 @@ def main(basedir=""):
     print("Cleaning raw data")
 
     # Drop records with <10mM
-    data_set.drop(data_set[(data_set["standard_units"] == "mM") & (data_set["standard_value"] >= 10)].index, inplace=True)
-    data_set.drop(data_set[(data_set["standard_units"] == "uM") & (data_set["standard_value"] >= 10000)].index, inplace=True)
-    data_set.drop(data_set[(data_set["standard_units"] == "nM") & (data_set["standard_value"] >= 10000000)].index, inplace=True)
+    data_set.drop(
+        data_set[
+            (data_set["standard_units"] == "mM") &
+            (data_set["standard_value"] >= 10)
+            ].index, inplace=True
+    )
+    data_set.drop(
+        data_set[
+            (data_set["standard_units"] == "uM") &
+            (data_set["standard_value"] >= 10000)
+            ].index, inplace=True
+    )
+    data_set.drop(
+        data_set[
+            (data_set["standard_units"] == "nM") &
+            (data_set["standard_value"] >= 10000000)
+            ].index, inplace=True)
 
     # Drop binding information as we are done with it
     data_set.drop(["standard_value", "standard_units"], axis=1, inplace=True)
@@ -57,7 +71,10 @@ def main(basedir=""):
             lambda x: ", ".join(x)
         )
     )
-    receptor_to_receptor_group_map = {key: group_to_agg_receptor[value] for key, value in receptor_to_group_map.items()}
+    receptor_to_receptor_group_map = {
+        key: group_to_agg_receptor[value]
+        for key, value in receptor_to_group_map.items()
+    }
 
     data_set["pref_name"].replace(receptor_to_receptor_group_map, inplace=True)
 
