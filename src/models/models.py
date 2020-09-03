@@ -2,29 +2,30 @@
 
 import os
 import pickle
+from abc import ABC, abstractmethod
 
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 
 
-class StructureToMOARFModel:
-    """Defines the random forest classifier model from structure to MOA"""
+class StructureToMOAModel(ABC):
+    """Abstract class for the models which take in a drug structure and output a predicted
+    mechanism of action"""
 
     def __init__(self,
-                 y_transform=None,
-                 project_base="../../",
-                 model_save_path="models/structuretomoa_model.pickle",
-                 n_estimators=10):
+                 y_transform,
+                 model_save_path,
+                 project_base="../../"):
+
+        self.y_transform = y_transform
 
         self.project_base = project_base
         self.model_save_path = model_save_path
-
-        self.model = RandomForestClassifier(n_estimators=n_estimators,
-                                            n_jobs=-1)
-        self.y_transform = y_transform
+        self.model = None
         self.trained = False
 
+    @abstractmethod
     def train(self, X, y):
         """Train the model
 
@@ -33,9 +34,8 @@ class StructureToMOARFModel:
             y: training target values
 
         """
-        self.model.fit(X, y)
-        self.trained = True
 
+    @abstractmethod
     def predict(self, data):
         """Predict a MOA from a structure
 
@@ -43,9 +43,9 @@ class StructureToMOARFModel:
             data: The structure to predict
 
         """
-        return self.model.predict(data)
 
-    def predict_top(self, data, n_outputs=5):
+    @abstractmethod
+    def predict_top(self, data, n_outputs):
         """Predict top n MOAs from a structure
 
         Args:
@@ -56,12 +56,9 @@ class StructureToMOARFModel:
             top: list of numeric category predictions
             probabilities: list of probabilities
         """
-        model_output = self.model.predict_proba(data)
-        top = np.argsort(model_output)[:, ::-1][:, :n_outputs]
-        probabilities = np.take_along_axis(model_output, top, 1)
-        return top, probabilities
 
-    def predict_top_pretty(self, data, n_outputs=5):
+    @abstractmethod
+    def predict_top_pretty(self, data, n_outputs):
         """Predict top n MOAs from a single structure
 
         Args:
@@ -71,9 +68,6 @@ class StructureToMOARFModel:
         Returns:
             pd.DataFrame: A pretty dataframe of labels and their probabilities
         """
-        top, probabilities = self.predict_top(data, n_outputs)
-        labels = [self.pred_to_label(x) for x in top[0]]
-        return pd.DataFrame({"target": labels, "probability": probabilities[0]})
 
     def pred_to_label(self, pred):
         """Take a model prediction and return the original label"""
@@ -110,3 +104,37 @@ class StructureToMOARFModel:
         """Private function to pickle the model"""
         with open(file_loc, 'wb') as f:
             pickle.dump([self.model, self.y_transform], f, protocol=4)
+
+
+class StructureToMOARFModel(StructureToMOAModel):
+    """Defines the random forest classifier model from structure to MOA"""
+
+    def __init__(self,
+                 y_transform=None,
+                 project_base="../../",
+                 model_save_path="models/structuretomoa_model.pickle",
+                 n_estimators=10):
+        StructureToMOAModel.__init__(self, y_transform=y_transform,
+                                     model_save_path=model_save_path,
+                                     project_base=project_base)
+
+        self.model = RandomForestClassifier(n_estimators=n_estimators,
+                                            n_jobs=-1)
+
+    def train(self, X, y):
+        self.model.fit(X, y)
+        self.trained = True
+
+    def predict(self, data):
+        return self.model.predict(data)
+
+    def predict_top(self, data, n_outputs=5):
+        model_output = self.model.predict_proba(data)
+        top = np.argsort(model_output)[:, ::-1][:, :n_outputs]
+        probabilities = np.take_along_axis(model_output, top, 1)
+        return top, probabilities
+
+    def predict_top_pretty(self, data, n_outputs=5):
+        top, probabilities = self.predict_top(data, n_outputs)
+        labels = [self.pred_to_label(x) for x in top[0]]
+        return pd.DataFrame({"target": labels, "probability": probabilities[0]})
