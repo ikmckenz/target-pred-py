@@ -7,7 +7,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 
 from src.features.build_features import Features
-from src.models.models import StructureToMOARFModel
+from src.models.models import StructureToMOARFModel, StructureToMOANNModel
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--trees", help="n_estimators for the model", type=int, default=10)
@@ -21,7 +21,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
 
 # Fitting model
 print("Fitting model")
-model = StructureToMOARFModel(y_transform=y_transform, n_estimators=args.trees)
+model = StructureToMOANNModel(y_transform=y_transform)
 model.train(X_train, y_train)
 
 # Predicting test set

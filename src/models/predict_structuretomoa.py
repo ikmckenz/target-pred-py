@@ -3,14 +3,14 @@
 
 import argparse
 from src.features.build_features import Features
-from src.models.models import StructureToMOARFModel
+from src.models.models import StructureToMOARFModel, StructureToMOANNModel
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--smiles", help="SMILES code of structure you want to predict", type=str)
 args = parser.parse_args()
 
 features = Features()
-model = StructureToMOARFModel()
+model = StructureToMOANNModel()
 model.load_model()
 
 smiles = args.smiles
