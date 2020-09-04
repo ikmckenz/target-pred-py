@@ -228,7 +228,7 @@ class StructureToMOANNModel(StructureToMOAModel):
 
     def predict(self, data):
         if not isinstance(data, torch.Tensor):
-            data = torch.Tensor(data).float()
+            data = torch.Tensor(data).float().to(self.device)
 
         with torch.no_grad():
             outputs = self.model(data)
@@ -239,7 +239,7 @@ class StructureToMOANNModel(StructureToMOAModel):
 
     def predict_top(self, data, n_outputs=5):
         if not isinstance(data, torch.Tensor):
-            data = torch.Tensor(data).float()
+            data = torch.Tensor(data).float().to(self.device)
 
         with torch.no_grad():
             outputs = self.model(data)
