@@ -27,6 +27,7 @@ To get up and running, first create the environment:
 ```bash
 conda create --name target-pred-py
 conda activate target-pred-py
+conda install -c pytorch -n target-pred-py pytorch cudatoolkit=10.2  # or cpuonly if you don't have CUDA
 conda install -c conda-forge -n target-pred-py rdkit textdistance
 conda install -n target-pred-py scikit-learn
 ```
@@ -38,11 +39,11 @@ python make_dataset.py
 cd ../features/
 python build_features.py
 cd ../models/
-python train_structuretomoa.py
+python train_structuretomoa.py --rf
 ```
 Now you can predict on new molecules:
 ```bash
-python predict_structuretomoa.py --smiles "yoursmilesstring"
+python predict_structuretomoa.py --smiles "yoursmilesstring" --rf
 ```
 
 ### Comparisons 
