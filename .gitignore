@@ -113,6 +113,7 @@ venv.bak/
 *.tar.gz
 *.csv
 *.pickle
+*.pth
 data/external/chembl_24/
 data/external/chembl_25/
-notebooks/.ipynb_checkpoints
+notebooks/.ipynb_checkpoints/
