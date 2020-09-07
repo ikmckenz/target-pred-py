@@ -80,7 +80,7 @@ def main(basedir=""):
 
     # Keep only rows where the target appears more than 100 times
     count = data_set["pref_name"].value_counts()
-    data_set = data_set[data_set["pref_name"].isin(count.index[count > 100])]
+    data_set = data_set[data_set["pref_name"].isin(count.index[count > 1000])]
 
     print("Saving processed data")
     data_set.to_csv(basedir + FINAL_DATA)
