@@ -1,6 +1,7 @@
 # pylint: disable=invalid-name
 """Script to train the structure to MOA model"""
 import argparse
+import sys
 
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -10,7 +11,18 @@ from src.features.build_features import Features
 from src.models.models import StructureToMOARFModel, StructureToMOANNModel
 
 parser = argparse.ArgumentParser()
+
+# Parse model type
+model_group = parser.add_mutually_exclusive_group(required=True)
+model_group.add_argument("--nn", action="store_true", help="Use neural net model")
+model_group.add_argument("--rf", action="store_true", help="Use random forrest model")
+
+# Add options for RF model
 parser.add_argument("--trees", help="n_estimators for the model", type=int, default=10)
+
+# Add options for NN model
+parser.add_argument("--no-gpu", "--no_gpu", action="store_true", help="Train nerual net on cpu", default=False)
+
 args = parser.parse_args()
 
 # Training data
@@ -21,7 +33,16 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
 
 # Fitting model
 print("Fitting model")
-model = StructureToMOANNModel(y_transform=y_transform)
+if args.rf:
+    model = StructureToMOARFModel(y_transform=y_transform, n_estimators=args.trees)
+elif args.nn:
+    if args.no_gpu:
+        model = StructureToMOANNModel(y_transform=y_transform, device="cpu")
+    else:
+        model = StructureToMOANNModel(y_transform=y_transform)
+else:
+    raise SyntaxError("Must specify a model type.")
+
 model.train(X_train, y_train)
 
 # Predicting test set
