@@ -155,11 +155,13 @@ class StructureToMOANNModel(StructureToMOAModel):
                  y_transform=None,
                  project_base="../../",
                  model_save_path="models/nn_model.pickle",
-                 device=None):
+                 device=None,
+                 n_classes=120,
+                 n_features=2048):
         StructureToMOAModel.__init__(self, y_transform=y_transform,
                                      model_save_path=model_save_path,
                                      project_base=project_base)
-        self.model = self.Net()
+        self.model = self.Net(n_classes=n_classes, n_features=n_features)
         if not device:
             self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         else:
@@ -168,12 +170,12 @@ class StructureToMOANNModel(StructureToMOAModel):
 
     class Net(nn.Module):
         """The neural net itself, with two hidden layers"""
-        def __init__(self):
+        def __init__(self, n_classes=120, n_features=2048):
             super().__init__()
 
-            self.l1 = nn.Linear(2048, 1024)
+            self.l1 = nn.Linear(n_features, 1024)
             self.l2 = nn.Linear(1024, 512)
-            self.output = nn.Linear(512, 120)
+            self.output = nn.Linear(512, n_classes)
 
         def forward(self, x):
             """The forward pass of the neural net, pass the input tensor through each of our
@@ -191,7 +193,7 @@ class StructureToMOANNModel(StructureToMOAModel):
             X = torch.Tensor(X).float()
         if not isinstance(y, torch.Tensor):
             y = torch.Tensor(y).long()
-        print(self.device)
+        print("Training on {}".format(self.device))
         my_dataset = TensorDataset(X, y)
         trainloader = DataLoader(my_dataset, batch_size=100, shuffle=True, num_workers=2)
 

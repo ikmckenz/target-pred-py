@@ -30,6 +30,8 @@ print("Loading training features")
 features = Features()
 X, y, y_transform = features.load_training_features()
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
+n_classes = len(y_transform)
+n_features = X_train.shape[1]
 
 # Fitting model
 print("Fitting model")
@@ -37,9 +39,9 @@ if args.rf:
     model = StructureToMOARFModel(y_transform=y_transform, n_estimators=args.trees)
 elif args.nn:
     if args.no_gpu:
-        model = StructureToMOANNModel(y_transform=y_transform, device="cpu")
+        model = StructureToMOANNModel(y_transform=y_transform, device="cpu", n_classes=n_classes, n_features=n_features)
     else:
-        model = StructureToMOANNModel(y_transform=y_transform)
+        model = StructureToMOANNModel(y_transform=y_transform, n_classes=n_classes, n_features=n_features)
 else:
     raise SyntaxError("Must specify a model type.")
 
