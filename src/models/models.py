@@ -195,12 +195,12 @@ class StructureToMOANNModel(StructureToMOAModel):
             y = torch.Tensor(y).long()
         print("Training on {}".format(self.device))
         my_dataset = TensorDataset(X, y)
-        trainloader = DataLoader(my_dataset, batch_size=100, shuffle=True, num_workers=2)
+        trainloader = DataLoader(my_dataset, batch_size=1000, shuffle=True, num_workers=2)
 
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(self.model.parameters(), lr=0.1, momentum=0.9)
 
-        for epoch in range(30):  # loop over the dataset multiple times
+        for epoch in range(20):  # loop over the dataset multiple times
 
             running_loss = 0.0
             for i, data in enumerate(trainloader, 0):
