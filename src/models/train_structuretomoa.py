@@ -23,13 +23,20 @@ parser.add_argument("--trees", help="n_estimators for the model", type=int, defa
 # Add options for NN model
 parser.add_argument("--no-gpu", "--no_gpu", action="store_true", help="Train nerual net on cpu", default=False)
 
+# Add option to train in the entire dataset or use a test set
+parser.add_argument("--no-test", "--no_test", action="store_true",
+    help="Train the model using the entire dataset (without make split into train/test set)")
+
 args = parser.parse_args()
 
 # Training data
 print("Loading training features")
 features = Features()
 X, y, y_transform = features.load_training_features()
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
+if args.no_test:
+    X_train, y_train = X, y
+else:
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
 n_classes = len(y_transform)
 n_features = X_train.shape[1]
 
@@ -47,25 +54,26 @@ else:
 
 model.train(X_train, y_train)
 
-# Predicting test set
-print("Predicting test set")
-y_pred = model.predict(X_test)
+# Predicting test set, if a test set exists (verify flag --no_test)
+if not args.no_test:
+    print("Predicting test set")
+    y_pred = model.predict(X_test)
 
-print(classification_report(y_test, y_pred))
-print(confusion_matrix(y_test, y_pred))
+    print(classification_report(y_test, y_pred))
+    print(confusion_matrix(y_test, y_pred))
 
-correct = 0
-incorrect = 0
-top_five, _ = model.predict_top(X_test)
-for idx, pred in enumerate(top_five):
-    if y_test[idx] in pred:
-        correct += 1
-    else:
-        incorrect += 1
+    correct = 0
+    incorrect = 0
+    top_five, _ = model.predict_top(X_test)
+    for idx, pred in enumerate(top_five):
+        if y_test[idx] in pred:
+            correct += 1
+        else:
+            incorrect += 1
 
-print("Top 5 Accuracy:")
-print("{} correct in top 5, {} not in top 5. {:.2%} top 5 accuracy.".format(
-    correct, incorrect, (correct/(correct+incorrect))))
+    print("Top 5 Accuracy:")
+    print("{} correct in top 5, {} not in top 5. {:.2%} top 5 accuracy.".format(
+        correct, incorrect, (correct/(correct+incorrect))))
 
 # Save model
 model.save_model(overwrite=True)
