@@ -245,7 +245,7 @@ class StructureToMOANNModel(StructureToMOAModel):
 
         with torch.no_grad():
             outputs = self.model(data)
-            prob, predicted = torch.topk(outputs.data, 5, 1)
+            prob, predicted = torch.topk(outputs.data, n_outputs, 1)
             np_pred = predicted.detach().cpu().numpy()
             np_prob = prob.detach().cpu().numpy()
 
