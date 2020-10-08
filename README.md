@@ -23,7 +23,9 @@ The SMILES data is used to generate a feature vector for each molecule with chem
 New models are currently being experimented on in the `notebooks/` folder.
 
 ### Getting started
-To get up and running, first create the environment:
+We use Anaconda as the base Python, install it from here: https://www.anaconda.com/products/individual.
+
+Then to get up and running, create the environment:
 ```bash
 conda create --name target-pred-py
 conda activate target-pred-py
