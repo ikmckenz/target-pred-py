@@ -45,7 +45,17 @@ python train_structuretomoa.py --rf
 ```
 Now you can predict on new molecules:
 ```bash
-python predict_structuretomoa.py --smiles "yoursmilesstring" --rf
+python predict_structuretomoa.py --smiles "CC(=O)OC1=CC=CC=C1C(=O)O" --rf   # SMILES string for aspirin (https://pubchem.ncbi.nlm.nih.gov/compound/2244)
+```
+Example output:
+```bash
+CC(=O)OC1=CC=CC=C1C(=O)O predicted to act on:
+                                              target  probability
+0                 Cyclooxygenase-2, Cyclooxygenase-1     0.696304
+1  Carbonic anhydrase II, Carbonic anhydrase VA, ...     0.303696
+2                          p53-binding protein Mdm-2     0.000000
+3                            Focal adhesion kinase 1     0.000000
+4  Dipeptidyl peptidase IV, Dipeptidyl peptidase ...     0.000000
 ```
 
 ### Comparisons 
