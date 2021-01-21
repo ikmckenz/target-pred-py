@@ -14,13 +14,12 @@ Currently the model with only FP6 fingerprints for features and only 150 trees i
 Although increasing the number of trees from 10 (77% accuracy) to 150 (78% accuracy) provides minimal improvement, it provides a measurable difference in top-5 accuracy.
 Top-5 accuracy increases in a linear fashion from 89% at 10 trees to 96% with 150. 
 Adding more features from molecular descriptors or using an ensemble model would likely boost accuracy without much engineering effort. 
-Also, experiments with different models such as Logistic Regression (like SwissTargetPrediction), SVMs, and neural networks should be tried.  
+Also, experiments with different models such as Logistic Regression (like SwissTargetPrediction), SVMs, and neural networks should be tried, experiments are ongoing in the `notebooks` folder.  
+A simple nerual network gets 79% top-1 accuracy and 97% top-5 accuracy, and the [chemprop](https://github.com/chemprop/chemprop) neural network gets 99% accuracy in preliminary testing.  
 
 The primary model is in `StructureToMOARFModel`, which predicts a mechanism of action from the structure of a drug-like molecule.
 This model is trained by creating a data set of chemical structures (encoded as SMILES) mapped to mechanisms of action. 
-The SMILES data is used to generate a feature vector for each molecule with chemical fingerprinting algorithms, and this is fed into a random forest machine learning algorithm.
-
-New models are currently being experimented on in the `notebooks/` folder.
+The SMILES data is used to generate a feature vector for each molecule with chemical fingerprinting algorithms, and this is fed into a random forest machine learning algorithm.  
 
 ### Getting started
 We use Anaconda as the base Python, install it from here: https://www.anaconda.com/products/individual.
